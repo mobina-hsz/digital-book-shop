@@ -5,20 +5,15 @@ import { Book } from "@/types/book";
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { soundManager } from "@/lib/sound";
 import {
   BookOpen,
   ChevronRight,
   ChevronLeft,
   Type,
-  Bookmark,
-  Share2,
-  Sparkles,
 } from "lucide-react";
 
 interface BookSampleModalProps {
@@ -37,7 +32,6 @@ export function BookSampleModal({
   const [currentPageIndex, setCurrentPageIndex] = React.useState(0);
   const [fontSizeClass, setFontSizeClass] = React.useState<"text-base" | "text-lg" | "text-xl">("text-base");
 
-  // Reset page index when opening a new book
   React.useEffect(() => {
     setCurrentPageIndex(0);
   }, [book?.id]);
@@ -52,17 +46,20 @@ export function BookSampleModal({
 
   const handleNextPage = () => {
     if (currentPageIndex < totalPages - 1) {
+      soundManager.playPageTurn();
       setCurrentPageIndex((prev) => prev + 1);
     }
   };
 
   const handlePrevPage = () => {
     if (currentPageIndex > 0) {
+      soundManager.playPageTurn();
       setCurrentPageIndex((prev) => prev - 1);
     }
   };
 
   const toggleFontSize = () => {
+    soundManager.playTick();
     if (fontSizeClass === "text-base") setFontSizeClass("text-lg");
     else if (fontSizeClass === "text-lg") setFontSizeClass("text-xl");
     else setFontSizeClass("text-base");
@@ -70,26 +67,26 @@ export function BookSampleModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="max-w-2xl w-[92vw] sm:w-full border-2 border-foreground bg-[#FDFCF7] dark:bg-[#121212] p-0 overflow-hidden shadow-2xl">
+      <DialogContent className="max-w-2xl w-[92vw] sm:w-full border-2 border-foreground bg-[#FFFFFF] dark:bg-[#0A0A0A] p-0 overflow-hidden shadow-2xl rounded-none">
         {/* Editorial Top Status */}
-        <div className="border-b border-foreground/20 bg-muted/40 px-6 py-3 flex items-center justify-between text-xs font-mono">
+        <div className="border-b border-foreground/20 bg-black text-white px-6 py-3 flex items-center justify-between text-xs font-mono">
           <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
+            <span className="w-2 h-2 bg-white animate-pulse" />
             <span className="uppercase tracking-widest font-bold">
               [پیش‌نمایش نمونه کتاب // گزیده ویژه آقا منصور]
             </span>
           </div>
-          <Badge variant="outline" className="font-mono text-[10px]">
+          <Badge variant="outline" className="font-mono text-[10px] text-white border-white/40 rounded-none">
             صفحه {currentPageIndex + 1} از {totalPages}
           </Badge>
         </div>
 
         {/* Header with Title and Metadata */}
-        <div className="px-6 pt-5 pb-3 border-b border-border/50">
+        <div className="px-6 pt-5 pb-3 border-b border-border/60">
           <div className="flex items-start justify-between gap-4">
             <div>
               <span className="font-mono text-[11px] text-muted-foreground uppercase tracking-wider block mb-1">
-                {book.category} • سال انتشار: {book.year}
+                [{book.category}] • سال انتشار: {book.year}
               </span>
               <h2 className="text-xl sm:text-2xl font-bold font-serif text-foreground leading-tight">
                 {book.title}
@@ -110,7 +107,7 @@ export function BookSampleModal({
                 variant="ghost"
                 size="sm"
                 onClick={toggleFontSize}
-                className="h-8 px-2 text-xs border border-border/60 hover:border-foreground"
+                className="h-8 px-2 text-xs border border-border/80 hover:border-foreground rounded-none"
                 title="تغییر اندازه قلم"
               >
                 <Type className="w-3.5 h-3.5 ml-1" />
@@ -119,13 +116,13 @@ export function BookSampleModal({
             </div>
           </div>
 
-          <div className="mt-3 py-1.5 px-3 bg-muted/30 border-r-2 border-foreground text-[11px] font-mono text-muted-foreground">
+          <div className="mt-3 py-1.5 px-3 bg-muted/40 border-r-2 border-foreground text-[11px] font-mono text-foreground/80">
             {book.sampleExcerpt.chapterTitle}
           </div>
         </div>
 
         {/* Sample Reading Paper Body */}
-        <div className="px-6 py-6 sm:py-8 min-h-[260px] max-h-[50vh] overflow-y-auto bg-amber-50/20 dark:bg-zinc-950/40 select-text">
+        <div className="px-6 py-6 sm:py-8 min-h-[260px] max-h-[50vh] overflow-y-auto bg-neutral-50/50 dark:bg-zinc-950/40 select-text">
           <div className={`font-serif leading-loose text-foreground/90 transition-all duration-200 text-justify ${fontSizeClass}`}>
             <span className="text-3xl sm:text-4xl font-bold float-right ml-3 font-serif text-foreground/40 leading-none">
               «
@@ -134,8 +131,8 @@ export function BookSampleModal({
           </div>
 
           {book.quote && (
-            <div className="mt-6 pt-4 border-t border-dashed border-border/60 text-xs font-serif italic text-muted-foreground/90">
-              جمله ماندگار اثر: {book.quote}
+            <div className="mt-6 pt-4 border-t border-dashed border-border/80 text-xs font-serif italic text-muted-foreground">
+              نقل‌قول ماندگار اثر: {book.quote}
             </div>
           )}
         </div>
@@ -149,7 +146,7 @@ export function BookSampleModal({
               size="sm"
               onClick={handlePrevPage}
               disabled={currentPageIndex === 0}
-              className="font-mono text-xs gap-1 border-foreground/30 hover:border-foreground"
+              className="font-mono text-xs gap-1 border-foreground/40 hover:border-foreground rounded-none"
             >
               <ChevronRight className="w-4 h-4" />
               صفحه قبل
@@ -164,7 +161,7 @@ export function BookSampleModal({
               size="sm"
               onClick={handleNextPage}
               disabled={currentPageIndex === totalPages - 1}
-              className="font-mono text-xs gap-1 border-foreground/30 hover:border-foreground"
+              className="font-mono text-xs gap-1 border-foreground/40 hover:border-foreground rounded-none"
             >
               صفحه بعد
               <ChevronLeft className="w-4 h-4" />
@@ -185,9 +182,9 @@ export function BookSampleModal({
                   onMarkPurchased(book.id);
                 }
               }}
-              className={`font-mono text-xs transition-all ${
+              className={`font-mono text-xs transition-all rounded-none ${
                 book.isPurchased
-                  ? "bg-emerald-600 hover:bg-emerald-700 text-white"
+                  ? "bg-emerald-600 hover:bg-emerald-700 text-white font-bold"
                   : "bg-foreground text-background"
               }`}
             >
@@ -199,4 +196,3 @@ export function BookSampleModal({
     </Dialog>
   );
 }
-

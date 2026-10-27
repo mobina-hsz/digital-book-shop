@@ -1,29 +1,22 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
 import { Book } from "@/types/book";
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
-  Calendar,
-  User,
   BookOpen,
-  Sparkles,
-  Tag,
-  Hash,
   Star,
   Check,
   BookmarkCheck,
+  Quote,
 } from "lucide-react";
 import { formatPrice } from "@/lib/utils";
+import { soundManager } from "@/lib/sound";
 
 interface BookDetailsModalProps {
   book: Book | null;
@@ -44,15 +37,16 @@ export function BookDetailsModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="max-w-3xl w-[94vw] sm:w-full border-2 border-foreground bg-background p-0 overflow-hidden shadow-2xl max-h-[90vh] flex flex-col">
+      <DialogContent className="max-w-3xl w-[95vw] sm:w-full border-2 border-foreground bg-background p-0 overflow-hidden shadow-2xl max-h-[92vh] flex flex-col rounded-none">
         {/* Top A24 Style Spec Bar */}
-        <div className="border-b border-foreground/20 bg-muted/40 px-6 py-2.5 flex items-center justify-between text-xs font-mono">
+        <div className="border-b border-foreground/20 bg-black text-white px-6 py-3 flex items-center justify-between text-xs font-mono">
           <div className="flex items-center gap-2">
+            <span className="w-2 h-2 bg-white" />
             <span className="font-bold tracking-widest uppercase">
-              [شناسنامه اثر // آرشیو الکترونیک]
+              [شناسنامه اثر // آرشیو الکترونیک A24]
             </span>
           </div>
-          <span className="text-muted-foreground">
+          <span className="text-[#888888]">
             شابک: {book.isbn || "ثبت‌شده در دایرکتوری"}
           </span>
         </div>
@@ -63,10 +57,10 @@ export function BookDetailsModal({
             {/* Book Spine / Cover Column */}
             <div className="md:col-span-5 flex flex-col items-center">
               {/* Realistic Rectangular Book Mock */}
-              <div className="relative group w-48 sm:w-56 aspect-[1/1.45] rounded-r-md rounded-l-sm shadow-2xl border border-foreground/20 overflow-hidden bg-muted transition-transform duration-300">
+              <div className="relative group w-48 sm:w-56 aspect-[1/1.45] rounded-l-sm rounded-r-md shadow-2xl border border-black/20 overflow-hidden bg-zinc-950 transition-transform duration-300">
                 {/* Book Spine Shadow Left Edge */}
-                <div className="absolute top-0 right-0 bottom-0 w-3 bg-gradient-to-l from-black/40 via-black/15 to-transparent z-10 pointer-events-none" />
-                <div className="absolute top-0 right-3 bottom-0 w-[1px] bg-white/20 z-10 pointer-events-none" />
+                <div className="absolute top-0 right-0 bottom-0 w-3.5 bg-gradient-to-l from-black/60 via-black/25 to-transparent z-10 pointer-events-none" />
+                <div className="absolute top-0 right-3.5 bottom-0 w-[1px] bg-white/20 z-10 pointer-events-none" />
 
                 {/* Cover Image */}
                 <img
@@ -77,7 +71,7 @@ export function BookDetailsModal({
 
                 {/* Floating Purchased Stamp */}
                 {book.isPurchased && (
-                  <div className="absolute top-3 left-3 z-20 bg-emerald-600 text-white text-[10px] font-mono px-2 py-1 rounded shadow-md flex items-center gap-1">
+                  <div className="absolute top-3 left-3 z-20 bg-emerald-600 text-white text-[10px] font-mono px-2 py-1 rounded-none shadow-md flex items-center gap-1">
                     <Check className="w-3 h-3" />
                     خریده شد
                   </div>
@@ -85,7 +79,7 @@ export function BookDetailsModal({
               </div>
 
               {/* Price & Rating Tag */}
-              <div className="mt-5 w-full border border-foreground/15 bg-muted/20 p-3 text-center space-y-1">
+              <div className="mt-5 w-full border border-foreground/20 bg-muted/40 p-4 text-center space-y-1">
                 <div className="font-mono text-xs text-muted-foreground uppercase">
                   ارزش‌گذاری نسخه الکترونیک
                 </div>
@@ -106,7 +100,7 @@ export function BookDetailsModal({
             <div className="md:col-span-7 space-y-5">
               <div>
                 <div className="flex items-center gap-2 mb-1.5">
-                  <Badge variant="outline" className="font-mono text-[10px]">
+                  <Badge variant="outline" className="font-mono text-[10px] rounded-none">
                     {book.category}
                   </Badge>
                   {book.originalTitle && (
@@ -120,41 +114,43 @@ export function BookDetailsModal({
                   {book.title}
                 </h1>
 
-                <div className="mt-3 grid grid-cols-2 gap-2 text-xs font-sans text-muted-foreground border-y border-border/50 py-3">
+                {/* Billing Block Grid */}
+                <div className="mt-4 grid grid-cols-2 gap-2 text-xs font-mono text-muted-foreground border-y border-border/60 py-3">
                   <div>
-                    <span className="font-mono text-[11px] text-foreground/70 block">
-                      نویسنده:
+                    <span className="text-[10px] text-foreground/60 block">
+                      [نویسنده]
                     </span>
-                    <span className="font-bold text-foreground">{book.author}</span>
+                    <span className="font-bold text-foreground font-sans">{book.author}</span>
                   </div>
                   {book.translator && (
                     <div>
-                      <span className="font-mono text-[11px] text-foreground/70 block">
-                        مترجم:
+                      <span className="text-[10px] text-foreground/60 block">
+                        [مترجم]
                       </span>
-                      <span className="font-bold text-foreground">
+                      <span className="font-bold text-foreground font-sans">
                         {book.translator}
                       </span>
                     </div>
                   )}
                   <div>
-                    <span className="font-mono text-[11px] text-foreground/70 block">
-                      سال انتشار:
+                    <span className="text-[10px] text-foreground/60 block">
+                      [سال انتشار]
                     </span>
-                    <span className="font-mono text-foreground">{book.year}</span>
+                    <span className="text-foreground">{book.year}</span>
                   </div>
                   <div>
-                    <span className="font-mono text-[11px] text-foreground/70 block">
-                      ناشر / مرجع:
+                    <span className="text-[10px] text-foreground/60 block">
+                      [تعداد صفحات]
                     </span>
-                    <span className="text-foreground">{book.publisher}</span>
+                    <span className="text-foreground">{book.pages} صفحه</span>
                   </div>
                 </div>
               </div>
 
-              {/* Quote */}
+              {/* Critic Quote */}
               {book.quote && (
-                <div className="border-r-2 border-foreground pr-3 py-1 font-serif text-sm italic text-foreground/80 bg-muted/10">
+                <div className="border-r-2 border-foreground pr-4 py-2 font-serif text-sm italic text-foreground/90 bg-muted/20">
+                  <Quote className="w-4 h-4 text-foreground/40 float-left ml-2 -scale-x-100" />
                   {book.quote}
                 </div>
               )}
@@ -173,13 +169,13 @@ export function BookDetailsModal({
               {book.tags && book.tags.length > 0 && (
                 <div className="space-y-1.5 pt-2">
                   <span className="font-mono text-[10px] text-muted-foreground uppercase block">
-                    کلیدواژه‌های موضوعی:
+                    [کلیدواژه‌های موضوعی]
                   </span>
                   <div className="flex flex-wrap gap-1.5">
                     {book.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="px-2 py-0.5 border border-foreground/15 text-[10px] font-mono bg-muted/20 text-muted-foreground"
+                        className="px-2 py-0.5 border border-foreground/20 text-[10px] font-mono bg-muted/30 text-foreground"
                       >
                         #{tag}
                       </span>
@@ -194,7 +190,7 @@ export function BookDetailsModal({
         {/* Modal Action Footer */}
         <div className="border-t border-foreground/20 bg-background px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="font-mono text-xs text-muted-foreground text-center sm:text-right">
-            ویترین کتاب آقا منصور • آماده بررسی و خرید
+            پروژه شرکت عقب‌گستر • ویترین کشف کتاب آقا منصور
           </div>
 
           <div className="flex items-center gap-3 w-full sm:w-auto">
@@ -203,10 +199,11 @@ export function BookDetailsModal({
               variant="outline"
               size="default"
               onClick={() => {
+                soundManager.playPageTurn();
                 onClose();
                 onOpenSample(book);
               }}
-              className="flex-1 sm:flex-initial font-mono text-xs gap-1.5 border-foreground hover:bg-foreground hover:text-background transition-colors"
+              className="flex-1 sm:flex-initial font-mono text-xs gap-1.5 border-foreground hover:bg-foreground hover:text-background transition-colors rounded-none"
             >
               <BookOpen className="w-3.5 h-3.5" />
               مطالعه نمونه (Pop-up)
@@ -217,9 +214,9 @@ export function BookDetailsModal({
               variant={book.isPurchased ? "secondary" : "default"}
               size="default"
               onClick={() => onMarkPurchased(book.id)}
-              className={`flex-1 sm:flex-initial font-mono text-xs gap-1.5 transition-all ${
+              className={`flex-1 sm:flex-initial font-mono text-xs gap-1.5 transition-all rounded-none ${
                 book.isPurchased
-                  ? "bg-emerald-600 hover:bg-emerald-700 text-white"
+                  ? "bg-emerald-600 hover:bg-emerald-700 text-white font-bold"
                   : "bg-foreground text-background hover:bg-foreground/90"
               }`}
             >
@@ -238,4 +235,3 @@ export function BookDetailsModal({
     </Dialog>
   );
 }
-
