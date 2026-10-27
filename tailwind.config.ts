@@ -17,9 +17,9 @@ const config: Config = {
     },
     extend: {
       fontFamily: {
-        sans: ["var(--font-vazirmatn)", "Inter", "sans-serif"],
-        serif: ["var(--font-serif)", "Playfair Display", "serif"],
-        mono: ["var(--font-mono)", "JetBrains Mono", "monospace"],
+        sans: ["Kalameh", "Inter", "sans-serif"],
+        serif: ["Playfair Display", "Kalameh", "serif"],
+        mono: ["JetBrains Mono", "monospace"],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -27,15 +27,6 @@ const config: Config = {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
-        a24: {
-          bone: "#F5F4EE",
-          paper: "#ECEBE4",
-          black: "#0A0A0A",
-          charcoal: "#1A1A1A",
-          muted: "#767672",
-          yellow: "#E8F044",
-          accent: "#D62828",
-        },
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
@@ -66,28 +57,9 @@ const config: Config = {
         },
       },
       borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
-      },
-      keyframes: {
-        "accordion-down": {
-          from: { height: "0" },
-          to: { height: "var(--radix-accordion-content-height)" },
-        },
-        "accordion-up": {
-          from: { height: "var(--radix-accordion-content-height)" },
-          to: { height: "0" },
-        },
-        "fade-in": {
-          from: { opacity: "0", transform: "translateY(6px)" },
-          to: { opacity: "1", transform: "translateY(0)" },
-        },
-      },
-      animation: {
-        "accordion-down": "accordion-down 0.2s ease-out",
-        "accordion-up": "accordion-up 0.2s ease-out",
-        "fade-in": "fade-in 0.3s ease-out",
+        lg: "0px",
+        md: "0px",
+        sm: "0px",
       },
     },
   },
@@ -95,4 +67,3 @@ const config: Config = {
 };
 
 export default config;
-

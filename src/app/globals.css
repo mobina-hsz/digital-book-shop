@@ -1,4 +1,37 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Vazirmatn:wght@100..900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+/* ===== FONT KALAMEH (فونت کلمه) ===== */
+@font-face {
+  font-family: 'Kalameh';
+  src: url('/fonts/Kalameh-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Kalameh';
+  src: url('/fonts/Kalameh-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Kalameh';
+  src: url('/fonts/Kalameh-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Kalameh';
+  src: url('/fonts/Kalameh-Black.woff2') format('woff2');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
 
 @tailwind base;
 @tailwind components;
@@ -57,7 +90,8 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground font-sans antialiased;
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Kalameh', -apple-system, BlinkMacSystemFont, sans-serif;
     font-feature-settings: "rlig" 1, "calt" 1;
     direction: rtl;
   }
